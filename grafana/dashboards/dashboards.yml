@@ -1,0 +1,18 @@
+apiVersion: 1
+
+providers:
+  - name: default
+    orgId: 1
+
+    # Dashboards loaded from filesystem
+    type: file
+
+    # Dashboards go into root folder
+    folder: ""
+
+    # Grafana watches this path for changes
+    options:
+      path: /var/lib/grafana/dashboards
+
+    # Reload dashboards every 30 seconds
+    updateIntervalSeconds: 30

@@ -1,0 +1,65 @@
+version: "3.9"  # Compose file format version
+
+services:
+  prometheus:
+    # Prometheus collects and stores metrics
+    image: prom/prometheus:latest
+    # Container name makes docker ps easier to read
+    container_name: prometheus
+    volumes:
+      # Mount Prometheus configuration (read-only)
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      # Persistent storage for metrics data
+      - prometheus_data:/prometheus
+    command:
+      # Tell Prometheus where the config file is
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      # Keep metrics for 7 days
+      - "--storage.tsdb.retention.time=7d"
+    ports:
+      # Expose Prometheus web UI on port
+      - "9090:9090"
+    # Restart policy, automatically restart unless explicitly stopped
+    restart: unless-stopped
+  node-exporter:
+    # Exposes host-level metrics (CPU, memory, disk, etc.)
+    image: prom/node-exporter:latest
+    container_name: node-exporter
+    # Needed so node-exporter can see host processes
+    pid: host
+    volumes:
+      # Read-only access to host system metrics
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      # Tell node-exporter where host filesystems are mounted
+      - "--path.procfs=/host/proc"
+      - "--path.sysfs=/host/sys"
+      - "--path.rootfs=/rootfs"
+    ports:
+      # Expose metrics endpoint
+      - "9100:9100"
+    restart: unless-stopped
+  grafana:
+    # Grafana visualizes metrics collected by Prometheus
+    image: grafana/grafana:latest
+    container_name: grafana
+    volumes:
+      # Persistent Grafana data (users, dashboards, etc.)
+      - grafana_data:/var/lib/grafana
+      # Auto-provision datasources and dashboards
+      - ./grafana/provisioning:/etc/grafana/provisioning
+    environment:
+      # Default admin credentials (CHANGE LATER)
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    ports:
+      # Grafana UI
+      - "3000:3000"
+    restart: unless-stopped
+
+volumes:
+  # Named volumes survive container restarts and upgrades
+  prometheus_data:
+  grafana_data:
