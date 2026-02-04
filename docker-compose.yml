@@ -60,6 +60,12 @@ services:
       # Grafana UI
       - "3000:3000"
     restart: unless-stopped
+  pilot:
+    image: ghcr.io/imkulwant/pilot:latest
+    container_name: pilot
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
 
 volumes:
   # Named volumes survive container restarts and upgrades
