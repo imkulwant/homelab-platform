@@ -2,6 +2,7 @@ apiVersion: 1
 
 datasources:
   - name: Prometheus            # Name shown in Grafana UI
+    uid: DS_PROMETHEUS
     type: prometheus            # Datasource type
     access: proxy               # Grafana proxies requests
     url: http://prometheus:9090 # Docker service name
