@@ -1,13 +1,14 @@
 # Monitoring Stack
 
-A minimal monitoring stack using Prometheus, Grafana, and Node Exporter. Easy to set up and operate, providing
-monitoring for deployment environments.
+A minimal monitoring stack using Prometheus, Grafana, Node Exporter, and Zipkin. Easy to set up and operate,
+providing monitoring and tracing for deployment environments.
 
 ### Key Objectives
 
 - Monitor server health and availability
 - Collect system resource metrics (CPU, memory, disk, network)
 - Provide time‑series visualization through dashboards
+- Enable distributed tracing for application requests
 
 ### Components
 
@@ -32,32 +33,39 @@ monitoring for deployment environments.
         - Node Exporter dashboards
     - No manual configuration required
 
+- **Zipkin**
+    - Collects and visualizes distributed traces
+    - UI for viewing request timelines and dependencies
+
 All components run as Docker containers and communicate over Docker’s internal network.
 
 ### Overview
 
 ```text
-+-------------------+
-|   Node Exporter   |
-|  (Host Metrics)   |
-|  :9100            |
-+---------+---------+
-          |
-          |  scrape
-          |
-+---------v---------+
-|    Prometheus     |
-|  (Metrics Store)  |
-|  :9090            |
-+---------+---------+
-          |
-          |  query
-          |
-+---------v---------+
-|     Grafana       |
-|  (Dashboards)     |
-|  :3000            |
-+-------------------+
++-------------------+         +-------------------+
+|   Node Exporter   |         |      Zipkin       |
+|  (Host Metrics)   |         |   (Tracing UI)    |
+|  :9100            |         |  :9411            |
++---------+---------+         +---------+---------+
+          |                             ^
+          |  scrape                     | traces
+          |                             |
++---------v---------+                   |
+|    Prometheus     |                   |
+|  (Metrics Store)  |                   |
+|  :9090            |                   |
++---------+---------+                   |
+          |                             |
+          |  query                      |
+          |                             |
++---------v---------+                   |
+|     Grafana       |                   |
+|  (Dashboards)     |                   |
+|  :3000            |                   |
++-------------------+                   |
+                                        |
+                                  (Instrumented
+                                   Applications)
 ```
 
 ### Getting Started
@@ -72,6 +80,7 @@ Access the services:
 Grafana    http://localhost:3000
 Prometheus http://localhost:9090
 Node Exp   http://localhost:9100/metrics
+Zipkin     http://localhost:9411
 ```
 
 Grafana default credentials:
