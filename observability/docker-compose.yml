@@ -16,9 +16,6 @@ services:
       - "--config.file=/etc/prometheus/prometheus.yml"
       # Keep metrics for 7 days
       - "--storage.tsdb.retention.time=7d"
-    ports:
-      # Expose Prometheus web UI on port
-      - "9090:9090"
     # Restart policy, automatically restart unless explicitly stopped
     restart: unless-stopped
     networks:
@@ -62,9 +59,6 @@ services:
       # Default admin credentials (CHANGE LATER)
       - GF_SECURITY_ADMIN_USER=admin
       - GF_SECURITY_ADMIN_PASSWORD=admin
-    ports:
-      # Grafana UI
-      - "3000:3000"
     restart: unless-stopped
     networks:
       - platform
