@@ -1,0 +1,26 @@
+services:
+  portainer:
+    image: portainer/portainer-ce:latest
+    container_name: portainer
+    restart: unless-stopped
+
+    # Portainer needs access to Docker to inspect/manage containers
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+
+    ports:
+      - "9000:9000"   # Web UI
+      - "9443:9443"   # HTTPS UI (optional)
+
+    networks:
+      - platform
+
+
+volumes:
+  portainer_data:
+
+
+networks:
+  platform:
+    external: true
