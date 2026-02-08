@@ -14,7 +14,7 @@ down:
 	docker compose -f observability/docker-compose.yml down
 	docker compose -f data/docker-compose.yml down
 	docker compose -f management/docker-compose.yml down
-	docker compose -f data/docker-compose.yml down
+	docker compose -f ingress/docker-compose.yml down
 
 status:
 	./scripts/verify_platform.sh
